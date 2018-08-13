@@ -40,23 +40,47 @@ module.exports = function (ctx) {
     // framework: 'all' --- includes everything; for dev only!
     framework: {
       components: [
+        'QAutocomplete',
+        'QBtn',
+        'QBtnDropdown',
+        'QCard',
+        'QCardTitle',
+        'QCardMain',
+        'QCardMedia',
+        'QCardSeparator',
+        'QCardActions',
+        'QCheckbox',
+        'QChipsInput',
+        'QDatetime',
+        'QField',
+        'QIcon',
+        'QInput',
+        'QItem',
+        'QItemMain',
+        'QItemSeparator',
+        'QItemSide',
+        'QItemTile',
         'QLayout',
         'QLayoutHeader',
         'QLayoutDrawer',
-        'QPageContainer',
-        'QPage',
-        'QToolbar',
-        'QToolbarTitle',
-        'QBtn',
-        'QIcon',
         'QList',
         'QListHeader',
-        'QItem',
-        'QItemMain',
-        'QItemSide'
+        'QModal',
+        'QOptionGroup',
+        'QPageContainer',
+        'QPage',
+        'QRadio',
+        'QSelect',
+        'QSpinner',
+        'QTab',
+        'QTabs',
+        'QTabPane',
+        'QToolbar',
+        'QToolbarTitle',
+        'QRouteTab'
       ],
       directives: [
-        'Ripple'
+        'Ripple', 'CloseOverlay'
       ],
       // Quasar plugins
       plugins: [
