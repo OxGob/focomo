@@ -42,8 +42,12 @@
 <script>
 import testCompoV from 'components/testCoVi.vue'
 import testCompoBu from 'components/testCoBu.vue'
+import compBu from 'components/coBuilder.vue'
+import compVi from 'components/coViewer.vue'
 export default {
   components: {
+    'coBuild': compBu,
+    'coView': compVi,
     'testCoVi': testCompoV,
     'testCoBu': testCompoBu
   },
