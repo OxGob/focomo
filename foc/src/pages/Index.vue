@@ -1,14 +1,22 @@
 <template>
-  <q-page class="bg-cyan-2 q-ma-xl">
-    <!-- <img alt="Quasar logo" src="~assets/quasar-logo-full.svg"> -->
+  <q-page class="bg-cyan-2 q-ma-xl" :content-css="{minWidth: '50vw'}">
+     <q-modal v-model="opened">
+        <h4>Basic Modal</h4>
+        <q-btn
+          color="primary"
+          @click="opened = false"
+          label="Close"
+        />
+      </q-modal>
   </q-page>
 </template>
 
-<style>
-</style>
-
 <script>
 export default {
-  name: 'PageIndex'
+  data () {
+    return {
+      opened: true
+    }
+  }
 }
 </script>
