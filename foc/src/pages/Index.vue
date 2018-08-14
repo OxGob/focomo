@@ -9,14 +9,32 @@
     </div>
     <!-- CLOSE Section for trying out tabs and pages -->
     <!-- Added button to open modal -->
-    <q-btn label="Open Modal" color="purple" @click="openModal" />
-     <q-modal v-model="opened">
+    <q-btn label="Open Modal" color="purple" @click="openBuilder" />
+     <q-modal v-model="openedBu">
+        <div class="row">
+          <div class="col-6"></div>
+          <div class="col-6">
+            <q-btn class="float-right q-mr-sm q-mt-sm" color="red" label="Exit Bu" @click="exitBuilder"/>
+          </div>
+        </div>
+        <testCoBu></testCoBu>
+        <div class="row">
+          <div class="col-6"></div>
+          <div class="col-6">
+            <q-btn class="float-right q-mr-sm q-mb-sm" color="green" label="Go to View" @click="goToView"/>
+          </div>
+        </div>
+     </q-modal>
+     <q-modal v-model="openedVi">
        <testCoVi></testCoVi>
-        <q-btn
-          color="primary"
-          @click="opened = false"
-          label="Exit"
-        />
+        <div class="row">
+          <div class="col-6">
+            <q-btn class="q-ml-sm q-mb-sm" color="amber" label="Back to Builder" @click="backToBuilder"/>
+          </div>
+          <div class="col-6">
+            <q-btn class="float-right q-mr-sm q-mb-sm" color="red" label="Exit Vi" @click="exitView"/>
+          </div>
+        </div>
       </q-modal>
   </q-page>
 </template>
@@ -31,13 +49,28 @@ export default {
   },
   data () {
     return {
-      opened: true,
+      openedBu: true,
+      openedVi: false,
       mainObj: ''
     }
   },
   methods: {
-    openModal () {
-      this.opened = true
+    backToBuilder () {
+      this.openedVi = false
+      this.openedBu = true
+    },
+    goToView () {
+      this.openedBu = false
+      this.openedVi = true
+    },
+    exitBuilder () {
+      this.openedBu = false
+    },
+    openBuilder () {
+      this.openedBu = true
+    },
+    exitView () {
+      this.openedVi = false
     }
   }
 }
