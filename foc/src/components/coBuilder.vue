@@ -76,7 +76,7 @@
               </div>
               <div class="col-0"></div>
               <div class="col-6">
-                <q-btn class="q-mb-md q-mr-md" color="red" icon-right="navigate_next" @click="genFormTapped">Form Preview</q-btn>
+                <q-btn class="float-right q-mb-md q-mr-md" color="red" icon-right="navigate_next" @click="genFormTapped">Form Preview</q-btn>
               </div>
             </div>
           <!-- <div v-show="showGenError=== true">

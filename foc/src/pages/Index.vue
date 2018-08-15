@@ -25,46 +25,37 @@
                 <q-field class="q-mb-sm" label="Form Label: ">
                   <q-input v-model="formG.formLabel" type="text" align="center" clearable />
                 </q-field>
-              <!-- GET flag from emitOpenFormViewer in Form Builder to show formViewer. -->
-              <!-- <div v-show="formG.showFormBuilder"> -->
-                <q-btn label="Open Builder" color="purple" @click="openBuilder" />
-                  <q-modal v-model="openedBu">
+              <!-- Get flag from emitOpenFormViewer in Form Builder to show formViewer. -->
+              <div v-show="formG.showFormBuilder">
+                <q-btn label="Open Form Builder" color="purple" @click="openBuilder(formInd)" />
+                  <q-modal v-model="formG.openedBu">
                       <div class="row">
                         <div class="col-6"></div>
                         <div class="col-6">
-                          <q-btn class="float-right q-mr-sm q-mt-sm" color="red" label="Exit Form Builder" @click="exitBuilder"/>
+                          <q-btn class="float-right q-mr-sm q-mt-sm" color="red" label="Exit Form Builder" @click="exitBuilder(formInd)"/>
                         </div>
                       </div>
-                      <!-- <testCoBu></testCoBu> -->
-                      <!-- <coBuild></coBuild> -->
-                        <coBuild @chiObjForm="formG.formComponentObj = $event" @emitOpenFormViewer="displayFormViewer(formInd)"></coBuild>
-                      <div class="row">
-                        <div class="col-6"></div>
-                        <div class="col-6">
-                          <q-btn class="float-right q-mr-sm q-mb-sm" color="green" label="Go to View" @click="goToView"/>
-                        </div>
-                      </div>
+                        <coBuild @chiObjForm="formG.formComponentObj = $event" @emitOpenFormViewer="goToViewer(formInd)"></coBuild>
                   </q-modal>
-                <!-- <coBuild @chiObjForm="formG.formComponentObj = $event" @emitOpenFormViewer="displayFormViewer(formInd)"></coBuild> -->
-              <!-- </div> -->
+              </div>
               <!-- Use v-if so that on the creation of component formViewer, init() can be run in formViewer -->
               <!-- On returning to its parent, the formViewer component will be destroyed -->
-              <div v-if="formG.showFormViewer">
+              <div v-if="formG.openedVi">
                 <!-- Send to component prop (:valFromParent). Receive from child (@returnToParent)   -->
-                <q-modal v-model="openedVi">
-                <!-- <testCoVi></testCoVi> -->
-                <!-- <coView></coView> -->
-                  <coView :valFromParent='formG' @returnToParent="displayFormBuilder(formInd)"></coView>
+                <q-modal v-model="formG.openedVi">
+                  <div class="row">
+                    <div class="col-8"></div>
+                    <div class="col-4">
+                      <q-btn class="float-right q-mr-sm q-mt-sm" label="Exit All" color = "red" @click="exitViewer(formInd)"/>
+                    </div>
+                  </div>
+                  <coView :valFromParent='formG' @returnToParent="backToBuilder(formInd)"></coView>
                   <div class="row">
                     <div class="col-6">
-                      <q-btn class="q-ml-sm q-mb-sm" color="amber" label="Back to Builder" @click="backToBuilder"/>
-                    </div>
-                    <div class="col-6">
-                      <q-btn class="float-right q-mr-sm q-mb-sm" color="red" label="Exit Vi" @click="exitView"/>
+                      <q-btn class="q-ml-sm q-mb-sm" color="amber" label="Back to Builder" @click="backToBuilder(formInd)"/>
                     </div>
                   </div>
                 </q-modal>
-                <!-- <coView :valFromParent='formG' @returnToParent="displayFormBuilder(formInd)"></coView> -->
               </div>
               <q-card-separator class="q-mb-md q-mt-lg"/>
             </div>
@@ -72,35 +63,6 @@
         </div>
       </q-card-main>
     </q-card>
-    <!-- <q-btn label="Open Modal" color="purple" @click="openBuilder" /> -->
-     <!-- <q-modal v-model="openedBu">
-        <div class="row">
-          <div class="col-6"></div>
-          <div class="col-6">
-            <q-btn class="float-right q-mr-sm q-mt-sm" color="red" label="Exit Bu" @click="exitBuilder"/>
-          </div>
-        </div> -->
-        <!-- <testCoBu></testCoBu> -->
-        <!-- <coBuild></coBuild> -->
-        <!-- <div class="row">
-          <div class="col-6"></div>
-          <div class="col-6">
-            <q-btn class="float-right q-mr-sm q-mb-sm" color="green" label="Go to View" @click="goToView"/>
-          </div>
-        </div>
-     </q-modal> -->
-     <!-- <q-modal v-model="openedVi"> -->
-       <!-- <testCoVi></testCoVi> -->
-       <!-- <coView></coView> -->
-        <!-- <div class="row">
-          <div class="col-6">
-            <q-btn class="q-ml-sm q-mb-sm" color="amber" label="Back to Builder" @click="backToBuilder"/>
-          </div>
-          <div class="col-6">
-            <q-btn class="float-right q-mr-sm q-mb-sm" color="red" label="Exit Vi" @click="exitView"/>
-          </div>
-        </div>
-      </q-modal> -->
   </q-page>
 </template>
 
@@ -118,8 +80,6 @@ export default {
   },
   data () {
     return {
-      openedBu: true,
-      openedVi: false,
       counterformsGen: 0,
       removedAllForms: false,
       showRowFirstTime: false,
@@ -129,6 +89,8 @@ export default {
           formComponentObj: '',
           indexFo: 0,
           rowExists: true,
+          openedBu: false,
+          openedVi: false,
           showFormBuilder: false,
           showFormViewer: false,
           toggleHideFoBld: false
@@ -166,19 +128,21 @@ export default {
     },
     // Form Row section
     addFormTapped () {
-      // var formInd = this.formsGen.length - 1
+      var formInd = this.formsGen.length - 1
       if (this.removedAllForms === true) {
         this.addFormRow()
-        // var formIndRAll = this.formsGen.length - 1
-        // this.displayFormBuilder(formIndRAll)
+        var formIndRAll = this.formsGen.length - 1
+        this.openBuilder(formIndRAll)
       } else {
         if (this.counterformsGen === 0) {
           this.showRowFirstTime = true
           // this.displayFormBuilder(formInd)
+          this.openBuilder(formInd)
         } else if (this.counterformsGen > 0) {
           this.addFormRow()
-          // var formInd1 = this.formsGen.length - 1
+          var formInd1 = this.formsGen.length - 1
           // this.displayFormBuilder(formInd1)
+          this.openBuilder(formInd1)
         }
       }
       this.removedAllForms = false
@@ -203,6 +167,8 @@ export default {
         formComponentObj: '',
         indexFo: this.counterformsGen,
         rowExists: true,
+        openedBu: false,
+        openedVi: false,
         showFormBuilder: true,
         showFormViewer: false,
         toggleHideFoBld: false
@@ -242,22 +208,22 @@ export default {
       }
     },
     // Previous simple nav methods
-    backToBuilder () {
-      this.openedVi = false
-      this.openedBu = true
+    backToBuilder (index) {
+      this.formsGen[index].openedVi = false
+      this.formsGen[index].openedBu = true
     },
-    goToView () {
-      this.openedBu = false
-      this.openedVi = true
+    goToViewer (index) {
+      this.formsGen[index].openedBu = false
+      this.formsGen[index].openedVi = true
     },
-    exitBuilder () {
-      this.openedBu = false
+    exitBuilder (index) {
+      this.formsGen[index].openedBu = false
     },
-    openBuilder () {
-      this.openedBu = true
+    openBuilder (index) {
+      this.formsGen[index].openedBu = true
     },
-    exitView () {
-      this.openedVi = false
+    exitViewer (index) {
+      this.formsGen[index].openedVi = false
     }
   }
 }
