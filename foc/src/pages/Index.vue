@@ -9,6 +9,41 @@
     </div>
     <!-- CLOSE Section for trying out tabs and pages -->
     <!-- Added button to open modal -->
+    <q-card class="bg-cyan-2 q-ma-xl">
+      <q-card-main>
+        <q-btn label="Add Form" color = "primary" @click="addFormTapped"/>
+        <q-card-separator class="q-mb-sm q-mt-md"/>
+        <div v-for="(formG, formInd) in formsGen" :key=formG.id>
+          <div v-if="formG.rowExists">
+            <div class="q-mb-md q-mt-md" v-show="showRowFirstTime">
+                <div class="row">
+                  <div class="col-5">
+                    <!-- <q-btn label="Show/Hide Form Builder" v-show="true" color = "green" @click="toggleFoBu(formInd)"/> -->
+                  </div>
+                  <div class="col-3"></div>
+                  <div class="col-4">
+                    <q-btn class="float-right" label="Remove Form" color = "pink" @click="removeForm(formInd)"/>
+                  </div>
+                </div>
+                <q-field class="q-mb-sm" label="Form Label: ">
+                  <q-input v-model="formG.formLabel" type="text" align="center" clearable />
+                </q-field>
+              <!-- GET flag from emitOpenFormViewer in Form Builder to show formViewer. -->
+              <div v-show="formG.showFormBuilder">
+                <coBuild @chiObjForm="formG.formComponentObj = $event" @emitOpenFormViewer="displayFormViewer(formInd)"></coBuild>
+              </div>
+              <!-- Use v-if so that on the creation of component formViewer, init() can be run in formViewer -->
+              <!-- On returning to its parent, the formViewer component will be destroyed -->
+              <div v-if="formG.showFormViewer">
+                <!-- Send to component prop (:valFromParent). Receive from child (@returnToParent)   -->
+                <coView :valFromParent='formG' @returnToParent="displayFormBuilder(formInd)"></coView>
+              </div>
+              <q-card-separator class="q-mb-md q-mt-lg"/>
+            </div>
+          </div>
+        </div>
+      </q-card-main>
+    </q-card>
     <q-btn label="Open Modal" color="purple" @click="openBuilder" />
      <q-modal v-model="openedBu">
         <div class="row">
@@ -18,7 +53,7 @@
           </div>
         </div>
         <!-- <testCoBu></testCoBu> -->
-        <coBuild></coBuild>
+        <!-- <coBuild></coBuild> -->
         <div class="row">
           <div class="col-6"></div>
           <div class="col-6">
@@ -28,7 +63,7 @@
      </q-modal>
      <q-modal v-model="openedVi">
        <!-- <testCoVi></testCoVi> -->
-       <coView></coView>
+       <!-- <coView></coView> -->
         <div class="row">
           <div class="col-6">
             <q-btn class="q-ml-sm q-mb-sm" color="amber" label="Back to Builder" @click="backToBuilder"/>
@@ -103,10 +138,10 @@ export default {
     },
     // Form Row section
     addFormTapped () {
-      var formInd = this.formsGen.length - 1
+      // var formInd = this.formsGen.length - 1
       if (this.removedAllForms === true) {
         this.addFormRow()
-        var formIndRAll = this.formsGen.length - 1
+        // var formIndRAll = this.formsGen.length - 1
         // this.displayFormBuilder(formIndRAll)
       } else {
         if (this.counterformsGen === 0) {
@@ -114,7 +149,7 @@ export default {
           // this.displayFormBuilder(formInd)
         } else if (this.counterformsGen > 0) {
           this.addFormRow()
-          var formInd1 = this.formsGen.length - 1
+          // var formInd1 = this.formsGen.length - 1
           // this.displayFormBuilder(formInd1)
         }
       }
