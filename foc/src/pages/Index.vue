@@ -8,9 +8,9 @@
       </q-tabs>
     </div>
     <!-- CLOSE Section for trying out tabs and pages -->
-    <!-- Added button to open modal -->
     <q-card class="bg-cyan-2 q-ma-xl">
       <q-card-main>
+        <!-- Form Section -->
         <q-btn label="Add Form" icon="add" color = "primary" @click="addFormTapped"/>
         <q-card-separator class="q-mb-sm q-mt-md"/>
         <div v-for="(formG, formInd) in formsGen" :key=formG.id>
@@ -30,9 +30,12 @@
                     <q-btn class="q-mt-sm" color="purple" icon-right="open_in_new" label="Open Form Builder" @click="openBuilder(formInd)" />
                   </div>
                   <div class="col-6">
-                    <q-btn class="float-right q-mt-sm" color="green-4" icon-right="open_in_new" label="Open Form Viewer" @click="goToViewer(formInd)" />
+                    <div v-show="formG.showFormViewer">
+                      <q-btn class="float-right q-mt-sm" color="green-4" icon-right="open_in_new" label="Open Form Viewer" @click="goToViewer(formInd)" />
+                    </div>
                   </div>
                 </div>
+          <!-- Form Builder Section -->
               <!-- Get flag from emitOpenFormViewer in Form Builder to show formViewer. -->
               <div v-show="formG.openedBu">
                   <q-modal v-model="formG.openedBu">
@@ -45,6 +48,7 @@
                         <coBuild @chiObjForm="formG.formComponentObj = $event" @emitOpenFormViewer="goToViewer(formInd)"></coBuild>
                   </q-modal>
               </div>
+          <!-- Form Viewer Section -->
               <!-- Use v-if so that on the creation of component formViewer, init() can be run in formViewer -->
               <!-- On returning to its parent, the formViewer component will be destroyed -->
               <div v-if="formG.openedVi">
@@ -59,7 +63,7 @@
                   <coView :valFromParent='formG' @returnToParent="backToBuilder(formInd)"></coView>
                   <div class="row">
                     <div class="col-6">
-                      <q-btn class="q-ml-sm q-mb-sm" color="amber" label="Back to Builder" @click="backToBuilder(formInd)"/>
+                      <q-btn class="q-ml-sm q-mb-sm" color="amber" label="Back to Builder3" @click="backToBuilder(formInd)"/>
                     </div>
                   </div>
                 </q-modal>
@@ -97,7 +101,8 @@ export default {
           indexFo: 0,
           rowExists: true,
           openedBu: false,
-          openedVi: false
+          openedVi: false,
+          showFormViewer: false
         }
       ],
       formTracker: [
@@ -149,7 +154,8 @@ export default {
         indexFo: this.counterformsGen,
         rowExists: true,
         openedBu: false,
-        openedVi: false
+        openedVi: false,
+        showFormViewer: false
       })
       this.updtFormTrackerAdd()
     },
@@ -191,6 +197,7 @@ export default {
       this.formsGen[index].openedBu = true
     },
     goToViewer (index) {
+      this.formsGen[index].showFormViewer = true
       this.formsGen[index].openedBu = false
       this.formsGen[index].openedVi = true
     },
