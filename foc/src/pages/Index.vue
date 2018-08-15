@@ -17,7 +17,8 @@
             <q-btn class="float-right q-mr-sm q-mt-sm" color="red" label="Exit Bu" @click="exitBuilder"/>
           </div>
         </div>
-        <testCoBu></testCoBu>
+        <!-- <testCoBu></testCoBu> -->
+        <coBuild></coBuild>
         <div class="row">
           <div class="col-6"></div>
           <div class="col-6">
@@ -26,7 +27,8 @@
         </div>
      </q-modal>
      <q-modal v-model="openedVi">
-       <testCoVi></testCoVi>
+       <!-- <testCoVi></testCoVi> -->
+       <coView></coView>
         <div class="row">
           <div class="col-6">
             <q-btn class="q-ml-sm q-mb-sm" color="amber" label="Back to Builder" @click="backToBuilder"/>
