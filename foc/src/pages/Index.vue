@@ -17,10 +17,7 @@
           <div v-if="formG.rowExists">
             <div class="q-mb-md q-mt-md" v-show="showRowFirstTime">
                 <div class="row">
-                  <div class="col-5">
-                    <!-- <q-btn label="Show/Hide Form Builder" v-show="true" color = "green" @click="toggleFoBu(formInd)"/> -->
-                  </div>
-                  <div class="col-3"></div>
+                  <div class="col-8"></div>
                   <div class="col-4">
                     <q-btn class="float-right" label="Remove Form" color = "pink" @click="removeForm(formInd)"/>
                   </div>
@@ -29,14 +26,45 @@
                   <q-input v-model="formG.formLabel" type="text" align="center" clearable />
                 </q-field>
               <!-- GET flag from emitOpenFormViewer in Form Builder to show formViewer. -->
-              <div v-show="formG.showFormBuilder">
-                <coBuild @chiObjForm="formG.formComponentObj = $event" @emitOpenFormViewer="displayFormViewer(formInd)"></coBuild>
-              </div>
+              <!-- <div v-show="formG.showFormBuilder"> -->
+                <q-btn label="Open Builder" color="purple" @click="openBuilder" />
+                  <q-modal v-model="openedBu">
+                      <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-6">
+                          <q-btn class="float-right q-mr-sm q-mt-sm" color="red" label="Exit Form Builder" @click="exitBuilder"/>
+                        </div>
+                      </div>
+                      <!-- <testCoBu></testCoBu> -->
+                      <!-- <coBuild></coBuild> -->
+                        <coBuild @chiObjForm="formG.formComponentObj = $event" @emitOpenFormViewer="displayFormViewer(formInd)"></coBuild>
+                      <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-6">
+                          <q-btn class="float-right q-mr-sm q-mb-sm" color="green" label="Go to View" @click="goToView"/>
+                        </div>
+                      </div>
+                  </q-modal>
+                <!-- <coBuild @chiObjForm="formG.formComponentObj = $event" @emitOpenFormViewer="displayFormViewer(formInd)"></coBuild> -->
+              <!-- </div> -->
               <!-- Use v-if so that on the creation of component formViewer, init() can be run in formViewer -->
               <!-- On returning to its parent, the formViewer component will be destroyed -->
               <div v-if="formG.showFormViewer">
                 <!-- Send to component prop (:valFromParent). Receive from child (@returnToParent)   -->
-                <coView :valFromParent='formG' @returnToParent="displayFormBuilder(formInd)"></coView>
+                <q-modal v-model="openedVi">
+                <!-- <testCoVi></testCoVi> -->
+                <!-- <coView></coView> -->
+                  <coView :valFromParent='formG' @returnToParent="displayFormBuilder(formInd)"></coView>
+                  <div class="row">
+                    <div class="col-6">
+                      <q-btn class="q-ml-sm q-mb-sm" color="amber" label="Back to Builder" @click="backToBuilder"/>
+                    </div>
+                    <div class="col-6">
+                      <q-btn class="float-right q-mr-sm q-mb-sm" color="red" label="Exit Vi" @click="exitView"/>
+                    </div>
+                  </div>
+                </q-modal>
+                <!-- <coView :valFromParent='formG' @returnToParent="displayFormBuilder(formInd)"></coView> -->
               </div>
               <q-card-separator class="q-mb-md q-mt-lg"/>
             </div>
@@ -44,27 +72,27 @@
         </div>
       </q-card-main>
     </q-card>
-    <q-btn label="Open Modal" color="purple" @click="openBuilder" />
-     <q-modal v-model="openedBu">
+    <!-- <q-btn label="Open Modal" color="purple" @click="openBuilder" /> -->
+     <!-- <q-modal v-model="openedBu">
         <div class="row">
           <div class="col-6"></div>
           <div class="col-6">
             <q-btn class="float-right q-mr-sm q-mt-sm" color="red" label="Exit Bu" @click="exitBuilder"/>
           </div>
-        </div>
+        </div> -->
         <!-- <testCoBu></testCoBu> -->
         <!-- <coBuild></coBuild> -->
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-6"></div>
           <div class="col-6">
             <q-btn class="float-right q-mr-sm q-mb-sm" color="green" label="Go to View" @click="goToView"/>
           </div>
         </div>
-     </q-modal>
-     <q-modal v-model="openedVi">
+     </q-modal> -->
+     <!-- <q-modal v-model="openedVi"> -->
        <!-- <testCoVi></testCoVi> -->
        <!-- <coView></coView> -->
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-6">
             <q-btn class="q-ml-sm q-mb-sm" color="amber" label="Back to Builder" @click="backToBuilder"/>
           </div>
@@ -72,7 +100,7 @@
             <q-btn class="float-right q-mr-sm q-mb-sm" color="red" label="Exit Vi" @click="exitView"/>
           </div>
         </div>
-      </q-modal>
+      </q-modal> -->
   </q-page>
 </template>
 
