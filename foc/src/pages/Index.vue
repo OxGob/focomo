@@ -57,10 +57,128 @@ export default {
     return {
       openedBu: true,
       openedVi: false,
-      mainObj: ''
+      counterformsGen: 0,
+      removedAllForms: false,
+      showRowFirstTime: false,
+      formsGen: [
+        {
+          formLabel: 'form 0',
+          formComponentObj: '',
+          indexFo: 0,
+          rowExists: true,
+          showFormBuilder: false,
+          showFormViewer: false,
+          toggleHideFoBld: false
+        }
+      ],
+      formTracker: [
+        {
+          formTkID: 'form 0',
+          indexOfForm: 0
+        }
+      ]
     }
   },
   methods: {
+    // Display Form Sections
+    displayFormViewer (index) {
+      this.$q.notify('displayFormViewer Called: ')
+      this.formsGen[index].showFormBuilder = false
+      this.formsGen[index].showFormViewer = true
+    },
+    displayFormBuilder (index) {
+      this.$q.notify('displayFormBuilder Called: ')
+      this.formsGen[index].showFormBuilder = true
+      this.formsGen[index].showFormViewer = false
+      this.toggleHideFoBld = true
+    },
+    toggleFoBu (formInd) {
+      if (this.formsGen[formInd].toggleHideFoBld === false) {
+        this.formsGen[formInd].showFormBuilder = false
+        this.formsGen[formInd].toggleHideFoBld = true
+      } else {
+        this.formsGen[formInd].showFormBuilder = true
+        this.formsGen[formInd].toggleHideFoBld = false
+      }
+    },
+    // Form Row section
+    addFormTapped () {
+      var formInd = this.formsGen.length - 1
+      if (this.removedAllForms === true) {
+        this.addFormRow()
+        var formIndRAll = this.formsGen.length - 1
+        // this.displayFormBuilder(formIndRAll)
+      } else {
+        if (this.counterformsGen === 0) {
+          this.showRowFirstTime = true
+          // this.displayFormBuilder(formInd)
+        } else if (this.counterformsGen > 0) {
+          this.addFormRow()
+          var formInd1 = this.formsGen.length - 1
+          // this.displayFormBuilder(formInd1)
+        }
+      }
+      this.removedAllForms = false
+      this.counterformsGen++
+    },
+    removeForm (formInd) {
+      if (formInd === 0) {
+        this.$q.notify('Removing last form')
+        this.formsGen[formInd].rowExists = false
+        this.formsGen.splice(formInd, 1)
+        this.removedAllForms = true
+        this.updtFormTracker(formInd)
+      } else {
+        this.formsGen[formInd].rowExists = false
+        this.formsGen.splice(formInd, 1)
+        this.updtFormTrackerRemove(formInd)
+      }
+    },
+    addFormRow () {
+      this.formsGen.push({
+        formLabel: 'Form ' + this.counterformsGen,
+        formComponentObj: '',
+        indexFo: this.counterformsGen,
+        rowExists: true,
+        showFormBuilder: true,
+        showFormViewer: false,
+        toggleHideFoBld: false
+      })
+      this.updtFormTrackerAdd()
+    },
+    updtFormTracker (formInd) {
+      // at index 0
+      this.formTracker[formInd].formTkID = ''
+      this.formTracker[formInd].indexOfForm = formInd
+    },
+    updtFormTrackerAdd () {
+      var lastIndexFormObj = this.formsGen.length - 1
+      if (this.removedAllForms === false) {
+        this.formTracker.push({
+          formTkID: this.formsGen[lastIndexFormObj].formLabel,
+          indexOfForm: lastIndexFormObj
+        })
+      } else {
+        this.formTracker[0].formTkID = this.formsGen[lastIndexFormObj].formLabel
+        this.formTracker[0].indexOfForm = lastIndexFormObj
+      }
+    },
+    updtFormTrackerRemove (formInd) {
+      var foTk = this.formTracker
+      // remove the selected index from the form tracking Array
+      foTk.splice(formInd, 1)
+      // In the tracking array, update the form index for those removed AFTER SPLICE index
+      var lenTrkAfterSplice = foTk.length
+      if (formInd < lenTrkAfterSplice) {
+      // If formInd is NOT LAST, then from formInd position till last, subtract 1 from values of indexOfForm
+        var i
+        for (i = formInd; i < lenTrkAfterSplice; i++) {
+          var fn = foTk[i].indexOfForm - 1
+          foTk[i].indexOfForm = fn
+        }
+      }
+    },
+    // Previous simple nav methods
     backToBuilder () {
       this.openedVi = false
       this.openedBu = true
