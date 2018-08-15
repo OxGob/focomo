@@ -11,7 +11,7 @@
     <!-- Added button to open modal -->
     <q-card class="bg-cyan-2 q-ma-xl">
       <q-card-main>
-        <q-btn label="Add Form" color = "primary" @click="addFormTapped"/>
+        <q-btn label="Add Form" icon="add" color = "primary" @click="addFormTapped"/>
         <q-card-separator class="q-mb-sm q-mt-md"/>
         <div v-for="(formG, formInd) in formsGen" :key=formG.id>
           <div v-if="formG.rowExists">
@@ -19,20 +19,27 @@
                 <div class="row">
                   <div class="col-8"></div>
                   <div class="col-4">
-                    <q-btn class="float-right" label="Remove Form" color = "pink" @click="removeForm(formInd)"/>
+                    <q-btn class="float-right q-mb-sm" color = "pink" icon="remove" label="Remove Form" @click="removeForm(formInd)"/>
                   </div>
                 </div>
                 <q-field class="q-mb-sm" label="Form Label: ">
                   <q-input v-model="formG.formLabel" type="text" align="center" clearable />
                 </q-field>
+                <div class="row">
+                  <div class="col-6">
+                    <q-btn class="q-mt-sm" color="purple" icon-right="open_in_new" label="Open Form Builder" @click="openBuilder(formInd)" />
+                  </div>
+                  <div class="col-6">
+                    <q-btn class="float-right q-mt-sm" color="green-4" icon-right="open_in_new" label="Open Form Viewer" @click="goToViewer(formInd)" />
+                  </div>
+                </div>
               <!-- Get flag from emitOpenFormViewer in Form Builder to show formViewer. -->
               <div v-show="formG.openedBu">
-                <q-btn label="Open Form Builder" color="purple" @click="openBuilder(formInd)" />
                   <q-modal v-model="formG.openedBu">
                       <div class="row">
                         <div class="col-6"></div>
                         <div class="col-6">
-                          <q-btn class="float-right q-mr-sm q-mt-sm" color="red" label="Exit Form Builder" @click="exitBuilder(formInd)"/>
+                          <q-btn class="float-right q-mr-sm q-mt-sm" color="red" icon="home" label="Exit Form Builder" @click="exitBuilder(formInd)"/>
                         </div>
                       </div>
                         <coBuild @chiObjForm="formG.formComponentObj = $event" @emitOpenFormViewer="goToViewer(formInd)"></coBuild>
@@ -46,7 +53,7 @@
                   <div class="row">
                     <div class="col-8"></div>
                     <div class="col-4">
-                      <q-btn class="float-right q-mr-sm q-mt-sm" label="Exit All" color = "red" @click="exitViewer(formInd)"/>
+                      <q-btn class="float-right q-mr-sm q-mt-sm" color = "red" icon="home" label="Exit All" @click="exitViewer(formInd)"/>
                     </div>
                   </div>
                   <coView :valFromParent='formG' @returnToParent="backToBuilder(formInd)"></coView>
