@@ -26,7 +26,7 @@
                   <q-input v-model="formG.formLabel" type="text" align="center" clearable />
                 </q-field>
               <!-- Get flag from emitOpenFormViewer in Form Builder to show formViewer. -->
-              <div v-show="formG.showFormBuilder">
+              <div v-show="formG.openedBu">
                 <q-btn label="Open Form Builder" color="purple" @click="openBuilder(formInd)" />
                   <q-modal v-model="formG.openedBu">
                       <div class="row">
@@ -90,10 +90,7 @@ export default {
           indexFo: 0,
           rowExists: true,
           openedBu: false,
-          openedVi: false,
-          showFormBuilder: false,
-          showFormViewer: false,
-          toggleHideFoBld: false
+          openedVi: false
         }
       ],
       formTracker: [
@@ -105,27 +102,6 @@ export default {
     }
   },
   methods: {
-    // Display Form Sections
-    displayFormViewer (index) {
-      this.$q.notify('displayFormViewer Called: ')
-      this.formsGen[index].showFormBuilder = false
-      this.formsGen[index].showFormViewer = true
-    },
-    displayFormBuilder (index) {
-      this.$q.notify('displayFormBuilder Called: ')
-      this.formsGen[index].showFormBuilder = true
-      this.formsGen[index].showFormViewer = false
-      this.toggleHideFoBld = true
-    },
-    toggleFoBu (formInd) {
-      if (this.formsGen[formInd].toggleHideFoBld === false) {
-        this.formsGen[formInd].showFormBuilder = false
-        this.formsGen[formInd].toggleHideFoBld = true
-      } else {
-        this.formsGen[formInd].showFormBuilder = true
-        this.formsGen[formInd].toggleHideFoBld = false
-      }
-    },
     // Form Row section
     addFormTapped () {
       var formInd = this.formsGen.length - 1
@@ -136,12 +112,10 @@ export default {
       } else {
         if (this.counterformsGen === 0) {
           this.showRowFirstTime = true
-          // this.displayFormBuilder(formInd)
           this.openBuilder(formInd)
         } else if (this.counterformsGen > 0) {
           this.addFormRow()
           var formInd1 = this.formsGen.length - 1
-          // this.displayFormBuilder(formInd1)
           this.openBuilder(formInd1)
         }
       }
@@ -168,10 +142,7 @@ export default {
         indexFo: this.counterformsGen,
         rowExists: true,
         openedBu: false,
-        openedVi: false,
-        showFormBuilder: true,
-        showFormViewer: false,
-        toggleHideFoBld: false
+        openedVi: false
       })
       this.updtFormTrackerAdd()
     },
@@ -207,7 +178,7 @@ export default {
         }
       }
     },
-    // Previous simple nav methods
+    // Navigation methods for Builder and Viewer
     backToBuilder (index) {
       this.formsGen[index].openedVi = false
       this.formsGen[index].openedBu = true
