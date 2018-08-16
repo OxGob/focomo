@@ -188,22 +188,39 @@ export default {
       }
     },
     // Navigation methods for Builder and Viewer
+    // This function returns to the Builder modal.
     backToBuilder (index) {
       this.formsGen[index].openedVi = false
       this.formsGen[index].openedBu = true
     },
+    // This function shows the Viewer modal.
     goToViewer (index) {
-      // Viewer is only opened if showFormViewerBtn is true. This is set if the comp obj
       this.formsGen[index].showFormViewerBtn = true
       this.formsGen[index].openedBu = false
       this.formsGen[index].openedVi = true
     },
+    // This function exits the Builder.
     exitBuilder (index) {
-      this.formsGen[index].openedBu = false
+      // Check the builder is the compObj is empty. If yes, open dialog to make sure we want to proceed.
+      if (this.formsGen[index].formComponentObj === '') {
+        this.$q.dialog({title: 'Exit Confirmation',
+          message: 'You have not saved any work yet. Do you want still want to exit?',
+          ok: 'Yes, Exit Form Builder',
+          cancel: 'No, Stay',
+          color: 'secondary',
+          preventClose: true}).then(() => {
+          this.formsGen[index].openedBu = false
+          this.$q.notify('Agreed!')
+        })
+      } else {
+        this.formsGen[index].openedBu = false
+      }
     },
+    // This function shows the Builder modal.
     openBuilder (index) {
       this.formsGen[index].openedBu = true
     },
+    // This function exits the Viewer.
     exitViewer (index) {
       this.formsGen[index].openedVi = false
     }
