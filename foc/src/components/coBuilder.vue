@@ -215,12 +215,14 @@ export default {
       }
     },
     // Navigation Methods
-    // This is called when clicking on Form Preview. --> Pre-GEN 5
+    // This is called when clicking on Form Preview. If validation passes runCheckOnForm(), call openFormViewer() --> Pre-GEN 5
     formPreviewTapped () {
-      this.runCheckOnForm()
+      if (this.runCheckOnForm() === true) {
+        this.emitToParentObj()
+        this.openFormViewer()
+      }
     },
-    // Function called by button click before generating form.
-    // If validation passes, call generateForm () --> Pre-GEN 6
+    // Function called for form validation before saving or generating Form Viewer. --> Pre-GEN 6
     runCheckOnForm: function () {
       // Get following error arrays: [errNxtQu, errAnChNx, errAnChLab], errQu
       // Get length of error array. Proceed to generate form ONLY IF all error arrays are false (i.e. length of 0)
@@ -235,6 +237,7 @@ export default {
       var lenErrAnChNx = errAnChNx.length
       var lenErrAnChLab = errAnChLab.length
       var checkFormTitleFailed = false
+      // If the Form title isn't filled in, set flag checkFormTitleFailed to true
       if (this.form.fname === '') {
         checkFormTitleFailed = true
       }
@@ -246,15 +249,8 @@ export default {
         return true
       }
     },
-    // Function called when generating form. If validation passes, call generateForm () --> Pre-GEN 7
-    generateForm () {
-      if (this.runCheckOnForm === true) {
-        this.emitToParentObj()
-        this.openFormViewer()
-      }
-    },
     // TRACKING ARRAYS METHODS
-    // This function updates the Question tracking index. Called by addRowQuestions(). --> Pre-GEN 8
+    // This function updates the Question tracking index. Called by addRowQuestions(). --> Pre-GEN 7
     addTrackQuId () {
       var qObj = this.form.questions
       // to get last index, need length of object as we always add to last index
@@ -264,7 +260,7 @@ export default {
         quesIndex: lastIndexQObj
       })
     },
-    // This function updates the Answer tracking index. Called by addAnswerChoices() --> Pre-GEN 9
+    // This function updates the Answer tracking index. Called by addAnswerChoices() --> Pre-GEN 8
     addTrackAnsChId (qIndex) {
       var aObj = this.form.questions[qIndex].answerChoices
       // to get last index, need length of object as we always add to last index
@@ -274,14 +270,14 @@ export default {
         ansIndex: lastIndexAObj
       })
     },
-    // This function is called to update the qTrackingID. --> Pre-GEN 10
+    // This function is called to update the qTrackingID. --> Pre-GEN 9
     updtQTrk (qIndex) {
       // on user updating the question.qId model
       this.form.qTrackingID[qIndex].quesID = this.form.questions[qIndex].qId
     },
     // Check Methods
     // This function checks the next Qu Id to either end or proceed.
-    // Called by searchNextQuestion().  --> Pre-GEN 11
+    // Called by searchNextQuestion().  --> Pre-GEN 10
     checkNextQId (qIdCheck) {
       // if there is a keyword, call finish. Otherwise proceed to get next question id
       if (qIdCheck.toUpperCase() === 'ENDFORM' || qIdCheck === '-1') {
@@ -293,7 +289,7 @@ export default {
     },
     // Validation Methods - Fields
     // This function checks if the question id is empty or a duplicate. Flags false.
-    // Called by genFormTapped()  --> Pre-GEN 12
+    // Called by genFormTapped()  --> Pre-GEN 11
     checkGenQ: function () {
       // ALGO --> If either next QuesId does not exist or is duplicate, return false
       var arrTk = this.form.qTrackingID
@@ -320,7 +316,7 @@ export default {
       errQu = Array.from(new Set(errQu.map(JSON.stringify))).map(JSON.parse)
       return errQu
     },
-    // This function checks if the next def Q ID exists for Questions and Answer Choices  --> Pre-GEN 13
+    // This function checks if the next def Q ID exists for Questions and Answer Choices  --> Pre-GEN 12
     checkNextDefId: function () {
       // 1. use defId from questions.defaultId. Cycle through questions []
       // 2. For each question, get the def id. Check this against the tracking q id. Also check for infinite loop.
@@ -378,7 +374,7 @@ export default {
       return [errNxtQu, errAnChNx, errAnChLab]
     },
     // This function checks if the answer choice label is empty or unique.
-    // Returns an error array. Called by checkNextDefId()  --> Pre-GEN 14
+    // Returns an error array. Called by checkNextDefId()  --> Pre-GEN 13
     checkAnsCh: function (i, ansChArr, lenAn, errAnsChLab) {
       // ALGO --> If either duplicate Ans Label or next QId does not exist, return error array with empty and duplicates Answer Label
       var j, k
@@ -407,7 +403,7 @@ export default {
       }
     },
     // Misc methods
-    // This function refreshes the page  --> Pre-GEN 15
+    // This function refreshes the page  --> Pre-GEN 14
     refreshPage () {
       location.reload(true)
     },
@@ -419,10 +415,10 @@ export default {
     },
     // TESTING METHODS
     // This function is called from the design form
-    // and saves a newly created JSON into a local file for testing. --> Pre-GEN 16
+    // and saves a newly created JSON into a local file for testing. --> Pre-GEN 15
     saveFormTapped () {
       this.runCheckOnForm()
-      if (this.runCheckOnForm === true) {
+      if (this.runCheckOnForm() === true) {
         this.emitToParentObj()
         const jsonData = JSON.stringify(this.form)
         console.log('jSON Data is: ', jsonData)
