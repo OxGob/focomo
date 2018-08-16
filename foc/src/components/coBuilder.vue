@@ -250,8 +250,6 @@ export default {
     generateForm () {
       this.emitToParentObj()
       this.openFormViewer()
-      this.tabWasLoaded = true
-      this.indexToShow = 0
     },
     // TRACKING ARRAYS METHODS
     // This function updates the Question tracking index. Called by addRowQuestions(). --> Pre-GEN 7

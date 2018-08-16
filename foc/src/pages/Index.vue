@@ -30,7 +30,7 @@
                     <q-btn class="q-mt-sm" color="purple" icon-right="open_in_new" label="Open Form Builder" @click="openBuilder(formInd)" />
                   </div>
                   <div class="col-6">
-                    <div v-show="formG.showFormViewer">
+                    <div v-show="formG.showFormViewerBtn">
                       <q-btn class="float-right q-mt-sm" color="green-4" icon-right="open_in_new" label="Open Form Viewer" @click="goToViewer(formInd)" />
                     </div>
                   </div>
@@ -45,7 +45,8 @@
                           <q-btn class="float-right q-mr-sm q-mt-sm" color="red" icon="home" label="Exit Form Builder" @click="exitBuilder(formInd)"/>
                         </div>
                       </div>
-                        <coBuild @chiObjForm="formG.formComponentObj = $event" @emitOpenFormViewer="goToViewer(formInd)"></coBuild>
+                        <coBuild @chiObjForm="formG.formComponentObj = $event"
+                         @emitOpenFormViewer="goToViewer(formInd)"></coBuild>
                   </q-modal>
               </div>
           <!-- Form Viewer Section -->
@@ -61,11 +62,6 @@
                     </div>
                   </div>
                   <coView :valFromParent='formG' @returnToParent="backToBuilder(formInd)"></coView>
-                  <div class="row">
-                    <div class="col-6">
-                      <q-btn class="q-ml-sm q-mb-sm" color="amber" label="Back to Builder3" @click="backToBuilder(formInd)"/>
-                    </div>
-                  </div>
                 </q-modal>
               </div>
               <q-card-separator class="q-mb-md q-mt-lg"/>
@@ -102,7 +98,7 @@ export default {
           rowExists: true,
           openedBu: false,
           openedVi: false,
-          showFormViewer: false
+          showFormViewerBtn: false
         }
       ],
       formTracker: [
@@ -155,7 +151,7 @@ export default {
         rowExists: true,
         openedBu: false,
         openedVi: false,
-        showFormViewer: false
+        showFormViewerBtn: false
       })
       this.updtFormTrackerAdd()
     },
@@ -197,7 +193,8 @@ export default {
       this.formsGen[index].openedBu = true
     },
     goToViewer (index) {
-      this.formsGen[index].showFormViewer = true
+      // Viewer is only opened if showFormViewerBtn is true. This is set if the comp obj
+      this.formsGen[index].showFormViewerBtn = true
       this.formsGen[index].openedBu = false
       this.formsGen[index].openedVi = true
     },

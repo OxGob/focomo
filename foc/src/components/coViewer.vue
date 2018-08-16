@@ -1,6 +1,6 @@
 <template>
   <q-page>
-      <h6> the prop is: {{this.valFromParent}} </h6>
+      <p> the prop is: {{this.valFromParent}} </p>
       <!-- QDesPos Tab -->
             <q-card class="bg-light-blue-2 q-ma-xl">
             <q-card-title>Resulting form
