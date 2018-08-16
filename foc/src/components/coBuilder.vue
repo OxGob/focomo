@@ -72,18 +72,13 @@
         <!-- QDes - final section -->
           <div class="row">
               <div class="col-6">
-                <q-btn class="q-mb-md q-ml-md" color="orange" icon-right="save" @click="saveForm">Save the form</q-btn>
+                <q-btn class="q-mb-md q-ml-md" color="orange" icon-right="save" @click="saveFormTapped">Save the form</q-btn>
               </div>
               <div class="col-0"></div>
               <div class="col-6">
-                <q-btn class="float-right q-mb-md q-mr-md" color="red" icon-right="navigate_next" @click="genFormTapped">Form Preview</q-btn>
+                <q-btn class="float-right q-mb-md q-mr-md" color="red" icon-right="navigate_next" @click="formPreviewTapped">Form Preview</q-btn>
               </div>
             </div>
-          <!-- <div v-show="showGenError=== true">
-            <p style="border:3px; border-style:solid;padding: 1em;color:red;">There are errors in this form. Please review that the following fields are valid: question, answer and next question. You won't be able to proceed until this is done.</p>
-          </div> -->
-            <!-- <q-btn class="q-ml-lg" label="Save Form / Fire Obj" color="purple" @click="emitToParentObj"/>
-            <q-btn class="q-ml-lg" label="test 2nd emit" color="pink-3" @click="openFormViewer"/> -->
         </q-card-main>
     </q-card>
 </template>
@@ -220,9 +215,13 @@ export default {
       }
     },
     // Navigation Methods
+    // This is called when clicking on Form Preview. --> Pre-GEN 5
+    formPreviewTapped () {
+      this.runCheckOnForm()
+    },
     // Function called by button click before generating form.
-    // If validation passes, call generateForm () --> Pre-GEN 5
-    genFormTapped () {
+    // If validation passes, call generateForm () --> Pre-GEN 6
+    runCheckOnForm: function () {
       // Get following error arrays: [errNxtQu, errAnChNx, errAnChLab], errQu
       // Get length of error array. Proceed to generate form ONLY IF all error arrays are false (i.e. length of 0)
       var errQu = this.checkGenQ()
@@ -242,17 +241,20 @@ export default {
 
       if ((lenErrQu > 0) || (lenErrNxtQu > 0) || (lenErrAnChNx > 0) || (lenErrAnChLab > 0) || (checkFormTitleFailed === true)) {
         // send index for error msgs??
+        return false
       } else {
-        this.generateForm()
+        return true
       }
     },
-    // Function called when generating form. If validation passes, call generateForm () --> Pre-GEN 6
+    // Function called when generating form. If validation passes, call generateForm () --> Pre-GEN 7
     generateForm () {
-      this.emitToParentObj()
-      this.openFormViewer()
+      if (this.runCheckOnForm === true) {
+        this.emitToParentObj()
+        this.openFormViewer()
+      }
     },
     // TRACKING ARRAYS METHODS
-    // This function updates the Question tracking index. Called by addRowQuestions(). --> Pre-GEN 7
+    // This function updates the Question tracking index. Called by addRowQuestions(). --> Pre-GEN 8
     addTrackQuId () {
       var qObj = this.form.questions
       // to get last index, need length of object as we always add to last index
@@ -262,7 +264,7 @@ export default {
         quesIndex: lastIndexQObj
       })
     },
-    // This function updates the Answer tracking index. Called by addAnswerChoices() --> Pre-GEN 8
+    // This function updates the Answer tracking index. Called by addAnswerChoices() --> Pre-GEN 9
     addTrackAnsChId (qIndex) {
       var aObj = this.form.questions[qIndex].answerChoices
       // to get last index, need length of object as we always add to last index
@@ -272,14 +274,14 @@ export default {
         ansIndex: lastIndexAObj
       })
     },
-    // This function is called to update the qTrackingID. --> Pre-GEN 9
+    // This function is called to update the qTrackingID. --> Pre-GEN 10
     updtQTrk (qIndex) {
       // on user updating the question.qId model
       this.form.qTrackingID[qIndex].quesID = this.form.questions[qIndex].qId
     },
     // Check Methods
     // This function checks the next Qu Id to either end or proceed.
-    // Called by searchNextQuestion().  --> Pre-GEN 10
+    // Called by searchNextQuestion().  --> Pre-GEN 11
     checkNextQId (qIdCheck) {
       // if there is a keyword, call finish. Otherwise proceed to get next question id
       if (qIdCheck.toUpperCase() === 'ENDFORM' || qIdCheck === '-1') {
@@ -291,7 +293,7 @@ export default {
     },
     // Validation Methods - Fields
     // This function checks if the question id is empty or a duplicate. Flags false.
-    // Called by genFormTapped()  --> Pre-GEN 11
+    // Called by genFormTapped()  --> Pre-GEN 12
     checkGenQ: function () {
       // ALGO --> If either next QuesId does not exist or is duplicate, return false
       var arrTk = this.form.qTrackingID
@@ -318,7 +320,7 @@ export default {
       errQu = Array.from(new Set(errQu.map(JSON.stringify))).map(JSON.parse)
       return errQu
     },
-    // This function checks if the next def Q ID exists for Questions and Answer Choices  --> Pre-GEN 12
+    // This function checks if the next def Q ID exists for Questions and Answer Choices  --> Pre-GEN 13
     checkNextDefId: function () {
       // 1. use defId from questions.defaultId. Cycle through questions []
       // 2. For each question, get the def id. Check this against the tracking q id. Also check for infinite loop.
@@ -376,7 +378,7 @@ export default {
       return [errNxtQu, errAnChNx, errAnChLab]
     },
     // This function checks if the answer choice label is empty or unique.
-    // Returns an error array. Called by checkNextDefId()  --> Pre-GEN 13
+    // Returns an error array. Called by checkNextDefId()  --> Pre-GEN 14
     checkAnsCh: function (i, ansChArr, lenAn, errAnsChLab) {
       // ALGO --> If either duplicate Ans Label or next QId does not exist, return error array with empty and duplicates Answer Label
       var j, k
@@ -405,7 +407,7 @@ export default {
       }
     },
     // Misc methods
-    // This function refreshes the page  --> Pre-GEN 14
+    // This function refreshes the page  --> Pre-GEN 15
     refreshPage () {
       location.reload(true)
     },
@@ -417,12 +419,17 @@ export default {
     },
     // TESTING METHODS
     // This function is called from the design form
-    // and saves a newly created JSON into a local file for testing. --> Pre-GEN 15
-    saveForm () {
-      this.emitToParentObj()
-      const jsonData = JSON.stringify(this.form)
-      console.log('jSON Data is: ', jsonData)
-      localStorage.setItem('testCOPDQ', jsonData)
+    // and saves a newly created JSON into a local file for testing. --> Pre-GEN 16
+    saveFormTapped () {
+      this.runCheckOnForm()
+      if (this.runCheckOnForm === true) {
+        this.emitToParentObj()
+        const jsonData = JSON.stringify(this.form)
+        console.log('jSON Data is: ', jsonData)
+        localStorage.setItem('testCOPDQ', jsonData)
+      } else {
+        this.$q.notify('Errors abound')
+      }
     }
   }
 }
